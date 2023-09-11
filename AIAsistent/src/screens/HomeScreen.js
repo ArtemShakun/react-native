@@ -1,5 +1,13 @@
 import React, {useState} from 'react';
-import {View, Text, SafeAreaView, Image, ScrollView} from 'react-native';
+import {
+  View,
+  Text,
+  SafeAreaView,
+  Image,
+  ScrollView,
+  Touchable,
+  TouchableOpacity,
+} from 'react-native';
 import {
   widthPercentageToDP as wp,
   heightPercentageToDP as hp,
@@ -9,6 +17,15 @@ import {dummyMessages} from '../constatns';
 
 export default function HomeScreen() {
   const [messages, setMessages] = useState(dummyMessages);
+  const [recording, setRecording] = useState(false);
+  const [speaking, setSpeaking] = useState(false);
+
+  const clear = () => {
+    setMessages([]);
+  };
+  const stopSpeaking = () => {
+    setSpeaking(false);
+  };
   return (
     <View className="flex-1 bg-white">
       <SafeAreaView className="flex-1 flex mx-5">
@@ -80,6 +97,42 @@ export default function HomeScreen() {
         ) : (
           <Features />
         )}
+        {/* recording, clear and stop buttons */}
+        <View className="flex justify-center items-center">
+          {recording ? (
+            <TouchableOpacity>
+              <Image
+                className="rounded-full"
+                source={require('../../assets/images/voiceLoading.gif')}
+                style={{width: hp(10), height: hp(10)}}
+              />
+            </TouchableOpacity>
+          ) : (
+            <TouchableOpacity>
+              <Image
+                className="rounded-full"
+                source={require('../../assets/images/recordingIcon.png')}
+                style={{width: hp(10), height: hp(10)}}
+              />
+            </TouchableOpacity>
+          )}
+
+          {messages.length > 0 && (
+            <TouchableOpacity
+              onPress={clear}
+              className="bg-neutral-400 rounded-3xl p-2 absolute right-10">
+              <Text className="text-white font-semibold">Clear</Text>
+            </TouchableOpacity>
+          )}
+
+          {speaking && (
+            <TouchableOpacity
+              onPress={stopSpeaking}
+              className="bg-red-400 rounded-3xl p-2 absolute left-10">
+              <Text className="text-white font-semibold">Stop</Text>
+            </TouchableOpacity>
+          )}
+        </View>
       </SafeAreaView>
     </View>
   );
